@@ -35,7 +35,7 @@ public class SecurityConfig  {
                 .cors()
                 .configurationSource( request -> {
                     CorsConfiguration configuration = new CorsConfiguration();
-                    configuration.setAllowedOrigins(Arrays.asList("http://localhost:5173", "http://localhost:4173"));
+                    configuration.setAllowedOrigins(Arrays.asList("http://localhost:5173", "http://localhost:4173", "https://toulouse-exotica.netlify.app"));
                     configuration.setAllowedMethods(Arrays.asList("GET","POST", "PUT", "DELETE"));
                     configuration.setAllowCredentials(true);
                     configuration.setAllowedHeaders(List.of("*"));
