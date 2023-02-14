@@ -14,7 +14,7 @@
 	<name>restapi</name>
 	<description>Restaurant Rest API</description>
 	<properties>
-		<java.version>11</java.version>
+		<java.version>6</java.version>
 	</properties>
 	<dependencies>
 		<dependency>
