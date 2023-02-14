@@ -43,7 +43,7 @@ public class AuthenticationService {
             if(request.getImg().isEmpty()) return  "\"Permitted Credentials\"";
             if(request.getPassword().isEmpty()) return  "\"Permitted Credentials\"";
             if(request.getUsername().isEmpty()) return  "\"Permitted Credentials\"";
-            UserEntity user = new UserEntity();
+            var user = new UserEntity();
             user.setName(request.getUsername());
             user.setPassword(passwordEncoder.encode("googlepw"));
             user.setImg(request.getImg());
@@ -51,7 +51,7 @@ public class AuthenticationService {
             user.setRole(Role.USER);
             user.setProvider(Provider.GOOGLE);
             repository.save(user);
-            String jwtToken = jwtService.generateToken(user);
+            var jwtToken = jwtService.generateToken(user);
 
             return jwtToken;
         }
@@ -64,7 +64,7 @@ public class AuthenticationService {
                 if(request.getImg().isEmpty()) return  "\"Permitted Credentials\"";
                 if(request.getPassword().isEmpty()) return  "\"Permitted Credentials\"";
                 if(request.getUsername().isEmpty()) return  "\"Permitted Credentials\"";
-            UserEntity user = new UserEntity();
+            var user = new UserEntity();
             user.setName(request.getUsername());
             user.setPassword(passwordEncoder.encode(request.getPassword()));
             String imgUrl = uploadService.save(request.getImg());
@@ -73,18 +73,18 @@ public class AuthenticationService {
             user.setRole(Role.USER);
             user.setProvider(Provider.INTERNAL);
             repository.save(user);
-            String jwtToken = jwtService.generateToken(user);
+            var jwtToken = jwtService.generateToken(user);
 
             return jwtToken;
         }
     }
     public String externalLogin(String email) {
         try{
-            UserEntity user = repository.findByEmail(email)
+            var user = repository.findByEmail(email)
                     .orElseThrow(() -> new ErrorResponseException(HttpStatus.NOT_FOUND));
             String provider = user.getProvider().toString();
             if(provider.equals("GOOGLE") ){
-                String jwtToken = jwtService.generateToken(user);
+                var jwtToken = jwtService.generateToken(user);
                 return jwtToken;
             }else{
                return  "\"User not logged in with google\"";
@@ -95,7 +95,7 @@ public class AuthenticationService {
     }
     public String internalLogin(LoginRequest request) {
             try{
-                UserEntity user = repository.findByEmail(request.getEmail())
+                var user = repository.findByEmail(request.getEmail())
                         .orElseThrow(() -> new ErrorResponseException(HttpStatus.NOT_FOUND));
                 String provider = user.getProvider().toString();
                 if(provider.equals("GOOGLE")){
@@ -107,7 +107,7 @@ public class AuthenticationService {
                                     request.getPassword()
                             )
                     );
-                    String jwtToken = jwtService.generateToken(user);
+                    var jwtToken = jwtService.generateToken(user);
                     return jwtToken;
                 }
 
