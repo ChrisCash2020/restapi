@@ -19,7 +19,7 @@ import java.util.Optional;
 public class ProductController {
     @Autowired
     private ProductRepository productRepository;
-    private  final ImageUploadService uploadService;
+    private final ImageUploadService uploadService;
 
     public ProductController(ProductRepository productRepository, ImageUploadService uploadService) {
         this.productRepository = productRepository;
@@ -27,17 +27,20 @@ public class ProductController {
     }
 
     @GetMapping
-    public ResponseEntity<Iterable<Product>>  getProducts(){
-        return new ResponseEntity<>( productRepository.findAll(Sort.by(Sort.Direction.ASC, "id")), HttpStatus.OK) ;
+    public ResponseEntity<Iterable<Product>> getProducts() {
+        return new ResponseEntity<>(productRepository.findAll(Sort.by(Sort.Direction.ASC, "id")), HttpStatus.OK);
     }
+
     @PostMapping("/create")
-    public ResponseEntity<?> createProduct(@RequestHeader("Authorization") String auth, @RequestParam("title") String title, @RequestParam("detail") String detail,
-                                                 @RequestParam("category") String category, @RequestParam("price") Float price, @RequestParam("stock") Integer stock, Optional<MultipartFile> img) {
+    public ResponseEntity<?> createProduct(@RequestHeader("Authorization") String auth,
+            @RequestParam("title") String title, @RequestParam("detail") String detail,
+            @RequestParam("category") String category, @RequestParam("price") Float price,
+            @RequestParam("stock") Integer stock, Optional<MultipartFile> img) {
         Product product = new Product();
-        if(img.isPresent()){
+        if (img.isPresent()) {
             product.setImg(uploadService.save(img.get()));
-        }else{
-            return  new ResponseEntity<String>("No Image given", HttpStatus.NOT_FOUND);
+        } else {
+            return new ResponseEntity<String>("No Image given", HttpStatus.NOT_FOUND);
         }
         product.setAlt(title);
         product.setTitle(title);
@@ -46,34 +49,39 @@ public class ProductController {
         product.setPrice(price);
         product.setStock(stock);
         productRepository.save(product);
-    return new ResponseEntity<Product>(product, HttpStatus.OK);
+        return new ResponseEntity<Product>(product, HttpStatus.OK);
     }
+
     @GetMapping("/{id}")
-    public ResponseEntity<?> getProduct(@PathVariable("id") Long productId ) {
-        if(productRepository.existsById(productId)){
+    public ResponseEntity<?> getProduct(@PathVariable("id") Long productId) {
+        if (productRepository.existsById(productId)) {
 
             return new ResponseEntity<>(productRepository.findById(productId), HttpStatus.ACCEPTED);
-        }else{
-            return  new ResponseEntity<>("Something Went Wrong", HttpStatus.NOT_FOUND);
+        } else {
+            return new ResponseEntity<>("Something Went Wrong", HttpStatus.NOT_FOUND);
         }
     }
+
     @DeleteMapping("/delete")
     public ResponseEntity<String> deleteProduct(@RequestParam("productsArr") List<Long> productsArr) {
         System.out.print(productsArr);
-      productsArr.forEach((id) -> {
-            if(productRepository.existsById(id)){
+        productsArr.forEach((id) -> {
+            if (productRepository.existsById(id)) {
                 productRepository.deleteById(id);
             }
-        } );
-        return new ResponseEntity<>( "Deleted" , HttpStatus.ACCEPTED);
+        });
+        return new ResponseEntity<>("Deleted", HttpStatus.ACCEPTED);
 
     }
+
     @PutMapping("/update/{id}")
-    public ResponseEntity<?> updateProduct(@RequestHeader("Authorization") String auth, @RequestParam("id") Long Id, @RequestParam("title") String title, @RequestParam("detail") String detail,
-                                           @RequestParam("category") String category, @RequestParam("price") Float price, @RequestParam("stock") Integer stock, Optional<MultipartFile> img) {
+    public ResponseEntity<?> updateProduct(@RequestHeader("Authorization") String auth, @RequestParam("id") Long Id,
+            @RequestParam("title") String title, @RequestParam("detail") String detail,
+            @RequestParam("category") String category, @RequestParam("price") Float price,
+            @RequestParam("stock") Integer stock, Optional<MultipartFile> img) {
         Optional<Product> currentProduct = productRepository.findById(Id);
-        if(currentProduct.isPresent()){
-            if(img.isPresent()){
+        if (currentProduct.isPresent()) {
+            if (img.isPresent()) {
                 currentProduct.get().setImg(uploadService.save(img.get()));
             }
             currentProduct.get().setAlt(title);
@@ -84,9 +92,9 @@ public class ProductController {
             currentProduct.get().setStock(stock);
 
             Product updatedProduct = productRepository.save(currentProduct.get());
-            return new ResponseEntity<Product>( updatedProduct , HttpStatus.ACCEPTED);
-        }else{
-            return  new ResponseEntity<>("Something Went Wrong", HttpStatus.NOT_FOUND);
+            return new ResponseEntity<Product>(updatedProduct, HttpStatus.ACCEPTED);
+        } else {
+            return new ResponseEntity<>("Something Went Wrong", HttpStatus.NOT_FOUND);
 
         }
     }

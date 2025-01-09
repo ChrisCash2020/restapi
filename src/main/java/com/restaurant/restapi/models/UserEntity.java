@@ -1,13 +1,20 @@
 package com.restaurant.restapi.models;
+
+import com.google.firebase.database.annotations.NotNull;
 import jakarta.annotation.Nonnull;
 import jakarta.persistence.*;
 import java.util.List;
 import java.util.Collection;
+
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 @Entity
+@Data
+@NoArgsConstructor
 @Table(name = "users")
 public class UserEntity implements UserDetails {
     @Id
@@ -15,47 +22,29 @@ public class UserEntity implements UserDetails {
     private Long id;
 
     @Column(name = "username")
-    @Nonnull
+    @NotNull
     private String name;
+
     @Column(name = "password")
     private String password;
 
-    public String getName() {
-        return name;
-    }
-
-    public String getImg() {
-        return img;
-    }
-
     @Column(name = "img")
     private String img;
+
     @Column(name = "email")
     private String email;
 
-    public Role getRole() {
-        return role;
-    }
-    public Provider getProvider() {
-        return provider;
-    }
-
-    @Column(name = "role")
     @Enumerated(EnumType.STRING)
+    @Column(name = "role")
     private Role role;
 
-    @Column(name = "provider")
     @Enumerated(EnumType.STRING)
+    @Column(name = "provider")
     private Provider provider;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return List.of(new SimpleGrantedAuthority(role.name()));
-    }
-
-    @Override
-    public String getPassword() {
-        return password;
     }
 
     @Override
@@ -82,28 +71,5 @@ public class UserEntity implements UserDetails {
     public boolean isEnabled() {
         return true;
     }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public void setImg(String img) {
-        this.img = img;
-    }
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
-    }
-
-    public void setRole(Role role) {
-        this.role = role;
-    }
-    public void setProvider(Provider provider) {
-        this.provider = provider;
-    }
-
 
 }
