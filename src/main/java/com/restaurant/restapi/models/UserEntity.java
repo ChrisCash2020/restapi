@@ -1,7 +1,6 @@
 package com.restaurant.restapi.models;
 
 import com.google.firebase.database.annotations.NotNull;
-import jakarta.annotation.Nonnull;
 import jakarta.persistence.*;
 import java.util.List;
 import java.util.Collection;
