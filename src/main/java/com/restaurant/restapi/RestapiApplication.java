@@ -13,7 +13,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 public class RestapiApplication {
 
 	public static void main(String[] args) throws IOException {
-		FileInputStream serviceAccount = new FileInputStream("src/food-1c80d-firebase-adminsdk-ysiwu-f9669aed7d.json");
+		FileInputStream serviceAccount = new FileInputStream("src/food-1c80d-firebase-adminsdk-ysiwu-716513ca46.json");
 
 		FirebaseOptions options = new FirebaseOptions.Builder()
 				.setCredentials(GoogleCredentials.fromStream(serviceAccount)).setStorageBucket("food-1c80d.appspot.com")
